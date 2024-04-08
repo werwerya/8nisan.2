@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyun Başlat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .hidden {
+            display: none;
+        }
+        .button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div id="oyunBaslaEkran" class="button">Oyuna Başla</div>
+
+<div id="veriFormu" class="hidden">
+    <label for="userData">Kullanıcı Adı:</label>
+    <input type="text" id="userData" name="userData">
+    <div id="veriGonder" class="button">Gönder</div>
+</div>
+
+<script>
+    document.getElementById('oyunBaslaEkran').addEventListener('click', function() {
+        fetch('https://deneme102-9b061acedaf9.herokuapp.com/submit-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'userData=a'
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Başarıyla gönderildi:', data);
+            this.style.display = 'none'; // "Oyuna Başla" butonunu gizle
+            document.getElementById('veriFormu').style.display = 'block'; // Kullanıcı giriş formunu göster
+        })
+        .catch((error) => {
+            console.error('Hata:', error);
+            alert('Bir hata oluştu, lütfen daha sonra tekrar deneyin.');
+        });
+    });
+
+    document.getElementById('veriGonder').addEventListener('click', function() {
+        const userData = document.getElementById('userData').value;
+        fetch('https://deneme102-9b061acedaf9.herokuapp.com/submit-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `userData=${encodeURIComponent(userData)}`
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Kullanıcı verisi başarıyla gönderildi:', data);
+            alert('Kullanıcı verisi başarıyla gönderildi!');
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            alert('Veri gönderilirken bir hata oluştu.');
+        });
+    });
+</script>
+
+</body>
+</html>
